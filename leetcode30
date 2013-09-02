@@ -1,0 +1,34 @@
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+
+class Solution {
+public:
+	vector<int> findSubstring(string S, vector<string> &L) {
+		vector<int> ret;
+		map<string, int> L_count;
+		map<string, int> S_count;
+		int fix_size = L[0].size();
+		int L_size = L.size();
+		for (int i = 0; i < L.size(); i++)
+			L_count[L[i]]++;
+		for (int i = 0; i < S.size() - fix_size*L_size; i++)
+		{
+			S_count.clear();
+			int j = 0;
+			for (; j < L_size; j++)
+			{
+				string ele = S.substr(i + j*fix_size, fix_size);
+				if (L_count.find(ele) == L_count.end())
+					break;
+				else
+					S_count[ele]++;
+				if (S_count[ele] > L_count[ele])
+					break;
+			}
+			if (j == L_size) ret.push_back(i);
+		}
+		return ret;
+	}
+};
