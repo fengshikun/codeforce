@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+#include <unordered_set>
+#include <vector>
+using namespace std;
+
+struct ele{
+	ele *parent;
+	string line_string;
+	string left_string;
+	bool isleaf;
+};
+
+vector<string> fit;
+int find_prefix(unordered_set<string> &dict,string& s,vector<string>& fit)
+{
+	fit.clear();
+	for(auto &x : dict)
+	{
+		auto z=s.find(x);
+		if(z==0)
+			fit.push_back(x);
+	}
+	if(fit.empty())
+		return -1;
+	else
+		return 1;
+}
+void find_leaf(unordered_set<string> &dict,string &s,ele * root,vector<ele*>& leaf)
+{
+	int en = find_prefix(dict,s,fit);
+	if(en==-1)
+		return;
+	for(auto ss:fit)
+	{
+		if(ss==s)
+		{
+			root->isleaf=true;
+			leaf.push_back(root);
+		}
+		else
+		{
+			ele *node=new ele;
+			node->parent=root;
+			node->isleaf=false;
+			node->line_string=ss;
+			node->left_string=s.substr(ss.length());
+			find_leaf(dict,node->left_string,node,leaf);
+		}
+	}
+}
+ele* build_tree(unordered_set<string> &dict,string &s,vector<ele*>& leaf)
+{
+	leaf.clear();
+	ele* root = new ele;
+	root->left_string=s;
+	root->isleaf=false;
+	root->parent=NULL;
+    find_leaf(dict,s,root,leaf);
+}
+
+int main()
+{
+
+	return 0;
+}
